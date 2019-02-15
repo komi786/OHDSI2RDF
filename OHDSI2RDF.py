@@ -83,10 +83,10 @@ with open("CONCEPT.csv") as fd:
     next(rd) ## Remove pesky header
     for row in rd:
 		print('<http://www.ohdsi.org/OHDSIVocab/' + row[0] + '> a owl:Class ;')
-		print('        skos:prefLabel """' + row[1] + '"""@en ;')
+		print('        skos:prefLabel """' + row[1].replace('"','\\"') + '"""@en ;')
 		print('        skos:concept """' + row[0] + '"""^^xsd:string ;')
 		print('        <http://www.ohdsi.org/OHDSIVocab/concept_id> """' + row[0] + '"""^^xsd:string ;')
-		print('        <http://www.ohdsi.org/OHDSIVocab/concept_name> """' + row[1] + '"""^^xsd:string ;')
+		print('        <http://www.ohdsi.org/OHDSIVocab/concept_name> """' + row[1].replace('"','\\"') + '"""^^xsd:string ;')
 		print('        <http://www.ohdsi.org/OHDSIVocab/domain_id> <http://www.ohdsi.org/OHDSIVocab/Domain/'+ (row[2].replace(' ','_')).replace('/','_') +'> ;')
 		print('        <http://www.ohdsi.org/OHDSIVocab/vocabulary_id> <http://www.ohdsi.org/OHDSIVocab/Vocabulary/'+ (row[3].replace(' ','_')).replace('/','_') +'> ;')
 		print('        <http://www.ohdsi.org/OHDSIVocab/concept_class_id> <http://www.ohdsi.org/OHDSIVocab/Concept_class/'+ (row[4].replace(' ','_')).replace('/','_') +'> ;')

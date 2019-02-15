@@ -2,11 +2,35 @@
 
 ### Read from Athena CPT processed Vocabulary files and Ananke UMLS CUI mappings into RDF turtle graph
 ### Created by: Juan M. Banda - Panacea Lab - Georgia State University
-### Version 0.5
+### Version 0.9
 ### Created during Biomedical Linked Annotation Hackathon (BLAH5) in Kashiwa, Japan
 ### http://blah5.linkedannotation.org/
 ###
 import csv
+import multiprocessing as mp
+
+def findCUI(lineOfText,mappingsList):
+    		row=lineOfText
+		print('<http://www.ohdsi.org/OHDSIVocab/' + row[0] + '> a owl:Class ;')
+		print('        skos:prefLabel """' + row[1] + '"""@en ;')
+		print('        skos:concept """' + row[0] + '"""^^xsd:string ;')
+		print('        <http://www.ohdsi.org/OHDSIVocab/concept_id> """' + row[0] + '"""^^xsd:string ;')
+		print('        <http://www.ohdsi.org/OHDSIVocab/concept_name> """' + row[1] + '"""^^xsd:string ;')
+		print('        <http://www.ohdsi.org/OHDSIVocab/domain_id> <http://www.ohdsi.org/OHDSIVocab/Domain/'+ (row[2].replace(' ','_')).replace('/','_') +'> ;')
+		print('        <http://www.ohdsi.org/OHDSIVocab/vocabulary_id> <http://www.ohdsi.org/OHDSIVocab/Vocabulary/'+ (row[3].replace(' ','_')).replace('/','_') +'> ;')
+		print('        <http://www.ohdsi.org/OHDSIVocab/concept_class_id> <http://www.ohdsi.org/OHDSIVocab/Concept_class/'+ (row[4].replace(' ','_')).replace('/','_') +'> ;')
+		print('        <http://www.ohdsi.org/OHDSIVocab/standard_concept> """' + row[5] + '"""^^xsd:string ;')
+		print('        <http://www.ohdsi.org/OHDSIVocab/concept_code> """' + row[6] + '"""^^xsd:string ;')
+		print('        <http://www.ohdsi.org/OHDSIVocab/valid_start_date> """' + row[7] + '"""^^xsd:string ;')
+		print('        <http://www.ohdsi.org/OHDSIVocab/valid_end_date> """' + row[8] + '"""^^xsd:string ;')
+		print('        <http://www.ohdsi.org/OHDSIVocab/invalid_reason> """' + row[9] + '"""^^xsd:string ;')
+		### This snippet finds the appropiate UMLS CUI mapping if available 
+		### This could be a looooot more efficient.... but works for now
+		for iR in range(0,len(mappingsList)-1):
+			if mappingsList[iR]['concept_id']==row[0]:
+				print('        umls:cui """' + mappingsList[iR]['CUI'] + ' """^^xsd:string ;')
+				break
+		print(' .')
 
 HEADER = """
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
@@ -15,6 +39,11 @@ HEADER = """
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix umls: <http://bioportal.bioontology.org/ontologies/umls/> .
 """
+
+
+#init objects
+pool = mp.Pool(4)
+jobs = []
 
 print (HEADER)
 
@@ -82,26 +111,14 @@ with open("CONCEPT.csv") as fd:
     rd = csv.reader(fd, delimiter="\t", quotechar="'")
     next(rd) ## Remove pesky header
     for row in rd:
-		print('<http://www.ohdsi.org/OHDSIVocab/' + row[0] + '> a owl:Class ;')
-		print('        skos:prefLabel """' + row[1] + '"""@en ;')
-		print('        skos:concept """' + row[0] + '"""^^xsd:string ;')
-		print('        <http://www.ohdsi.org/OHDSIVocab/concept_id> """' + row[0] + '"""^^xsd:string ;')
-		print('        <http://www.ohdsi.org/OHDSIVocab/concept_name> """' + row[1] + '"""^^xsd:string ;')
-		print('        <http://www.ohdsi.org/OHDSIVocab/domain_id> <http://www.ohdsi.org/OHDSIVocab/Domain/'+ (row[2].replace(' ','_')).replace('/','_') +'> ;')
-		print('        <http://www.ohdsi.org/OHDSIVocab/vocabulary_id> <http://www.ohdsi.org/OHDSIVocab/Vocabulary/'+ (row[3].replace(' ','_')).replace('/','_') +'> ;')
-		print('        <http://www.ohdsi.org/OHDSIVocab/concept_class_id> <http://www.ohdsi.org/OHDSIVocab/Concept_class/'+ (row[4].replace(' ','_')).replace('/','_') +'> ;')
-		print('        <http://www.ohdsi.org/OHDSIVocab/standard_concept> """' + row[5] + '"""^^xsd:string ;')
-		print('        <http://www.ohdsi.org/OHDSIVocab/concept_code> """' + row[6] + '"""^^xsd:string ;')
-		print('        <http://www.ohdsi.org/OHDSIVocab/valid_start_date> """' + row[7] + '"""^^xsd:string ;')
-		print('        <http://www.ohdsi.org/OHDSIVocab/valid_end_date> """' + row[8] + '"""^^xsd:string ;')
-		print('        <http://www.ohdsi.org/OHDSIVocab/invalid_reason> """' + row[9] + '"""^^xsd:string ;')
-		### This snippet finds the appropiate UMLS CUI mapping if available 
-		### This could be a looooot more efficient.... but works for now
-		for iR in range(0,len(data)-1):
-			if data[iR]['concept_id']==row[0]:
-				print('        umls:cui """' + data[iR]['CUI'] + ' """^^xsd:string ;')
-				break
-		print(' .')
+      jobs.append( pool.apply_async(findCUI,(row,data)) )
+
+#wait for all jobs to finish
+for job in jobs:
+    job.get()
+
+#clean up
+pool.close()
 
 ##Footer of the document ###
 print('''

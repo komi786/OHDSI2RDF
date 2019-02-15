@@ -1,9 +1,8 @@
 # OHDSI2RDF
-First Header | Second Header
------------- | -------------
-![OHDSIlogo](http://www.jmbanda.com/t-ohdsi-logo-only.png) |  ###Fully connecting the Observational Health Data Science and Informatics (OHDSI) initiative with the world of linked open data
-![sample](http://www.jmbanda.com/sample_tripple.png)
 
+###Fully connecting the Observational Health Data Science and Informatics (OHDSI) initiative with the world of linked open data
+
+![sample](http://www.jmbanda.com/sample_tripple.png)
 
 Leveraging [Ananke](https://github.com/thepanacealab/OHDSIananke), the utility here converts [Athena](http://athena.ohdsi.org/) vocbulary files into one large Turtle file containing the vocabulary converted to an RDF graph.
 
@@ -15,6 +14,8 @@ We are veru grateful for the support on this work.
 
 Release Notes: 
 
+
+![OHDSIlogo](http://www.jmbanda.com/t-ohdsi-logo-only.png)
 ![RDFtripple](http://www.jmbanda.com/rdf.png)
 
 

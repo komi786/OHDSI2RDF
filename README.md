@@ -20,8 +20,9 @@ We are veru grateful for the support on this work.
 
 ### Version 1.0:  Relationships included: Vocabulary, Domain, Concept_class, Concept
 
-### TO DO: Add ancestor and Synonym relationships
-### TO DO: Improve CUI assigning from Ananke source 
+### TO DO
+* Add ancestor and Synonym relationships
+* Improve CUI assigning from Ananke source 
 
 ![OHDSIlogo](http://www.jmbanda.com/t-ohdsi-logo-only.png)
 ![RDFtripple](http://www.jmbanda.com/rdf.png)

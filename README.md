@@ -20,7 +20,7 @@ We are veru grateful for the support on this work.
 
 ### Version 1.0:  Relationships included: Vocabulary, Domain, Concept_class, Concept
 
-### TO DO
+## TO DO
 * Add ancestor and Synonym relationships
 * Improve CUI assigning from Ananke source 
 

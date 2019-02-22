@@ -14,18 +14,18 @@ We are veru grateful for the support on this work.
 
 ## Usage Instructions:
 
-There are two versions of this utility: OHDSI2RDF.py and OHDSI2RDF_mp.py. The first one is single threaded and the second program uses multi-processing. However, the second one seems slower, so be sure to try them.
+There are three versions of this utility: OHDSI2RDF_dict.py, OHDSI2RDF.py and OHDSI2RDF_mp.py. The first one uses a dictionary, the second one is single threaded and the third program uses multi-processing. However, the second one seems slower, so be sure to try them.
 
 Assumptions: This program assumes that you have the OHDSI vocabulary CSV files extracted in the folder you are running this code and they have the standard uppercase named files. The second assumption is that you have the Ananke mappings in the standard CSV file provided. 
 
 How to run
 ```
-python OHDSI2RDF.py >> OHDSI2RDF.ttl 
+python OHDSI2RDF_dict.py >> OHDSI2RDF.ttl 
 ```
 
 The program outputs to the screen, so be sure to capture the output on a file. 
 
-#### NOTE: This will take quite a long time (20+ hours) so be sure to run this on a screen
+#### NOTE: With enough RAM this runs in about 15 minutes
 
 ## Release Notes: 
 

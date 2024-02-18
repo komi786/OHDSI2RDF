@@ -1,11 +1,14 @@
 #! /usr/bin/env python
 
-### Read from Athena CPT processed Vocabulary files and Ananke UMLS CUI mappings into RDF turtle graph
-### Created by: Juan M. Banda - Panacea Lab - Georgia State University
-### Version 0.5
-### Created during Biomedical Linked Annotation Hackathon (BLAH5) in Kashiwa, Japan
-### http://blah5.linkedannotation.org/
-###
+"""
+ Read from Athena CPT processed Vocabulary files and Ananke UMLS CUI mappings into RDF turtle graph
+Created by: Juan M. Banda - Panacea Lab - Georgia State University
+Version 0.5
+Created during Biomedical Linked Annotation Hackathon (BLAH5) in Kashiwa, Japan
+http://blah5.linkedannotation.org/
+
+"""
+
 import csv
 
 HEADER = """
@@ -16,98 +19,110 @@ HEADER = """
 @prefix umls: <http://bioportal.bioontology.org/ontologies/umls/> .
 """
 
-print (HEADER)
+print(HEADER)
 
 with open("VOCABULARY.csv") as fd:
     rd = csv.reader(fd, delimiter="\t", quotechar="'")
     next(rd)
     for row in rd:
-        if row[0]=='None':
-                        print("<http://www.ohdsi.org/OHDSIVocab/OHDSIVocabulary>")
-                        print("    a owl:Ontology ;")
-                        print('    rdfs:comment "' + row[1] + '" ;')
-                        print('    rdfs:label "' + row[2] + '" ;')
-                        print("    owl:imports <http://www.w3.org/2004/02/skos/core> ;")
-                        print('    owl:versionInfo "' + row[3] + '"')
-                        print(".")
+        if row[0] == 'None':
+            print("<http://www.ohdsi.org/OHDSIVocab/OHDSIVocabulary>")
+            print("    a owl:Ontology ;")
+            print('    rdfs:comment "' + row[1] + '" ;')
+            print('    rdfs:label "' + row[2] + '" ;')
+            print("    owl:imports <http://www.w3.org/2004/02/skos/core> ;")
+            print('    owl:versionInfo "' + row[3] + '"')
+            print(".")
 
-## Get the Vocabulary relations ##
+# Get the Vocabulary relations
+
 with open("VOCABULARY.csv") as fd:
     rd = csv.reader(fd, delimiter="\t", quotechar="'")
     next(rd)
     for row in rd:
-	if row[0]!='None':
-			print('<http://www.ohdsi.org/OHDSIVocab/Vocabulary/' + (row[0].replace(' ','_')).replace('/','_') + '> a owl:Class ;')
-			print('        skos:prefLabel """' + row[1] + '"""@en ;')
-			print('        skos:concept """' + row[0] + '"""^^xsd:string ;')
-			print('        <http://www.ohdsi.org/OHDSIVocab/vocabulary_name> """' + row[1] + '"""^^xsd:string ;')
-			print('        <http://www.ohdsi.org/OHDSIVocab/vocabulary_reference> """' + row[2] + '"""^^xsd:string ;')
-			print('        <http://www.ohdsi.org/OHDSIVocab/vocabulary_version> """' + row[3] + '"""^^xsd:string ;')
-			print('        <http://www.ohdsi.org/OHDSIVocab/vocabulary_concept_id> """' + row[4] + '"""^^xsd:string ;')
-			print(".")
+        if row[0] != 'None':
+            print('<http://www.ohdsi.org/OHDSIVocab/Vocabulary/' + (row[0].replace(' ', '_')).replace('/',
+                                                                                                      '_') + '> a owl:Class ;')
+            print('        skos:prefLabel """' + row[1] + '"""@en ;')
+            print('        skos:concept """' + row[0] + '"""^^xsd:string ;')
+            print('        <http://www.ohdsi.org/OHDSIVocab/vocabulary_name> """' + row[1] + '"""^^xsd:string ;')
+            print('        <http://www.ohdsi.org/OHDSIVocab/vocabulary_reference> """' + row[2] + '"""^^xsd:string ;')
+            print('        <http://www.ohdsi.org/OHDSIVocab/vocabulary_version> """' + row[3] + '"""^^xsd:string ;')
+            print('        <http://www.ohdsi.org/OHDSIVocab/vocabulary_concept_id> """' + row[4] + '"""^^xsd:string ;')
+            print(".")
+            print(".")
 
-## Get the domain relations ##
+# Get the domain relations #
 with open("DOMAIN.csv") as fd:
     rd = csv.reader(fd, delimiter="\t", quotechar="'")
     next(rd)
     for row in rd:
-		print('<http://www.ohdsi.org/OHDSIVocab/Domain/' + (row[0].replace(' ','_')).replace('/','_') + '> a owl:Class ;')
-		print('        skos:prefLabel """' + row[1] + '"""@en ;')
-		print('        skos:concept """' + row[2] + '"""^^xsd:string ;')
-		print('        <http://www.ohdsi.org/OHDSIVocab/domain_id> """' + row[0].replace(' ','_') + '"""^^xsd:string ;')
-		print('        <http://www.ohdsi.org/OHDSIVocab/domain_name> """' + row[1] + '"""^^xsd:string ;')
-		print('        <http://www.ohdsi.org/OHDSIVocab/domain_concept_id> """' + row[2] + '"""^^xsd:string ;')
-		print('.')
+        print('<http://www.ohdsi.org/OHDSIVocab/Domain/' + (row[0].replace(' ', '_')).replace('/',
+                                                                                              '_') + '> a owl:Class ;')
+        print('        skos:prefLabel """' + row[1] + '"""@en ;')
+        print('        skos:concept """' + row[2] + '"""^^xsd:string ;')
+        print(
+            '        <http://www.ohdsi.org/OHDSIVocab/domain_id> """' + row[0].replace(' ', '_') + '"""^^xsd:string ;')
+        print('        <http://www.ohdsi.org/OHDSIVocab/domain_name> """' + row[1] + '"""^^xsd:string ;')
+        print('        <http://www.ohdsi.org/OHDSIVocab/domain_concept_id> """' + row[2] + '"""^^xsd:string ;')
+        print('.')
 
-## Get the concept_class relations ##
+# Get the concept_class relations ##
 with open("CONCEPT_CLASS.csv") as fd:
     rd = csv.reader(fd, delimiter="\t", quotechar="'")
     next(rd)
     for row in rd:
-		print('<http://www.ohdsi.org/OHDSIVocab/Concept_class/' + (row[0].replace(' ','_')).replace('/','_') + '> a owl:Class ;')
-		print('        skos:prefLabel """' + row[1] + '"""@en ;')
-		print('        skos:concept """' + row[2] + '"""^^xsd:string ;')
-		print('        <http://www.ohdsi.org/OHDSIVocab/concept_class_id> """' + (row[0].replace(' ','_')).replace('/','_') + '"""^^xsd:string ;')
-		print('        <http://www.ohdsi.org/OHDSIVocab/concept_class_name> """' + row[1] + '"""^^xsd:string ;')
-		print('        <http://www.ohdsi.org/OHDSIVocab/concept_class_concept_id> """' + row[2] + '"""^^xsd:string ;')
-		print('.')
+        print('<http://www.ohdsi.org/OHDSIVocab/Concept_class/' + (row[0].replace(' ', '_')).replace('/',
+                                                                                                     '_') + '> a owl:Class ;')
+        print('        skos:prefLabel """' + row[1] + '"""@en ;')
+        print('        skos:concept """' + row[2] + '"""^^xsd:string ;')
+        print('        <http://www.ohdsi.org/OHDSIVocab/concept_class_id> """' + (row[0].replace(' ', '_')).replace('/',
+                                                                                                                    '_') + '"""^^xsd:string ;')
+        print('        <http://www.ohdsi.org/OHDSIVocab/concept_class_name> """' + row[1] + '"""^^xsd:string ;')
+        print('        <http://www.ohdsi.org/OHDSIVocab/concept_class_concept_id> """' + row[2] + '"""^^xsd:string ;')
+        print('.')
 
-### We want to read the Annanke Mappings in memory for faster searches of the corresponding CUI
+# We want to read the Annanke Mappings in memory for faster searches of the corresponding CUI
 an_dict = {}
 with open("AnankeV2.csv") as f:
     reader = csv.reader(f, delimiter=",", quotechar="\"")
     next(reader)
     for row_D in reader:
-	an_dict.update( {row_D[1] : row_D[0]} )
+        an_dict.update({row_D[1]: row_D[0]})
 
 ## Now for the main concept mappings ##
 with open("CONCEPT.csv") as fd:
     rd = csv.reader(fd, delimiter="\t", quotechar="'")
-    next(rd) ## Remove pesky header
+    next(rd)  ## Remove pesky header
     for row in rd:
-		print('<http://athena.ohdsi.org/search-terms/terms/' + row[0] + '> a owl:Class ;')
-		print('        skos:prefLabel """' + row[1].replace('"','\\"') + '"""@en ;')
-		print('        skos:concept """' + row[0] + '"""^^xsd:string ;')
-		print('        <http://www.ohdsi.org/OHDSIVocab/concept_id> """' + row[0] + '"""^^xsd:string ;')
-		print('        <http://www.ohdsi.org/OHDSIVocab/concept_name> """' + row[1].replace('"','\\"') + '"""^^xsd:string ;')
-		print('        <http://www.ohdsi.org/OHDSIVocab/domain_id> <http://www.ohdsi.org/OHDSIVocab/Domain/'+ (row[2].replace(' ','_')).replace('/','_') +'> ;')
-		print('        <http://www.ohdsi.org/OHDSIVocab/vocabulary_id> <http://www.ohdsi.org/OHDSIVocab/Vocabulary/'+ (row[3].replace(' ','_')).replace('/','_') +'> ;')
-		print('        <http://www.ohdsi.org/OHDSIVocab/concept_class_id> <http://www.ohdsi.org/OHDSIVocab/Concept_class/'+ (row[4].replace(' ','_')).replace('/','_') +'> ;')
-		print('        <http://www.ohdsi.org/OHDSIVocab/standard_concept> """' + row[5] + '"""^^xsd:string ;')
-		print('        <http://www.ohdsi.org/OHDSIVocab/concept_code> """' + row[6] + '"""^^xsd:string ;')
-		print('        <http://www.ohdsi.org/OHDSIVocab/valid_start_date> """' + row[7] + '"""^^xsd:string ;')
-		print('        <http://www.ohdsi.org/OHDSIVocab/valid_end_date> """' + row[8] + '"""^^xsd:string ;')
-		print('        <http://www.ohdsi.org/OHDSIVocab/invalid_reason> """' + row[9] + '"""^^xsd:string ;')
-		### This snippet finds the appropiate UMLS CUI mapping if available
-		mappingC=an_dict.get(row[0], 'NA')
-		if mappingC != 'NA':
-			print('        umls:cui """' + mappingC + ' """^^xsd:string ;') 
-		### This could be a looooot more efficient.... but works for now
-		#for iR in range(0,len(data)-1):
-		#	if data[iR]['concept_id']==row[0]:
-		#		print('        umls:cui """' + data[iR]['CUI'] + ' """^^xsd:string ;')
-		#		break
-		print(' .')
+        print('<http://athena.ohdsi.org/search-terms/terms/' + row[0] + '> a owl:Class ;')
+        print('        skos:prefLabel """' + row[1].replace('"', '\\"') + '"""@en ;')
+        print('        skos:concept """' + row[0] + '"""^^xsd:string ;')
+        print('        <http://www.ohdsi.org/OHDSIVocab/concept_id> """' + row[0] + '"""^^xsd:string ;')
+        print('        <http://www.ohdsi.org/OHDSIVocab/concept_name> """' + row[1].replace('"',
+                                                                                            '\\"') + '"""^^xsd:string ;')
+        print('        <http://www.ohdsi.org/OHDSIVocab/domain_id> <http://www.ohdsi.org/OHDSIVocab/Domain/' + (
+            row[2].replace(' ', '_')).replace('/', '_') + '> ;')
+        print('        <http://www.ohdsi.org/OHDSIVocab/vocabulary_id> <http://www.ohdsi.org/OHDSIVocab/Vocabulary/' + (
+            row[3].replace(' ', '_')).replace('/', '_') + '> ;')
+        print(
+            '        <http://www.ohdsi.org/OHDSIVocab/concept_class_id> <http://www.ohdsi.org/OHDSIVocab/Concept_class/' + (
+                row[4].replace(' ', '_')).replace('/', '_') + '> ;')
+        print('        <http://www.ohdsi.org/OHDSIVocab/standard_concept> """' + row[5] + '"""^^xsd:string ;')
+        print('        <http://www.ohdsi.org/OHDSIVocab/concept_code> """' + row[6] + '"""^^xsd:string ;')
+        print('        <http://www.ohdsi.org/OHDSIVocab/valid_start_date> """' + row[7] + '"""^^xsd:string ;')
+        print('        <http://www.ohdsi.org/OHDSIVocab/valid_end_date> """' + row[8] + '"""^^xsd:string ;')
+        print('        <http://www.ohdsi.org/OHDSIVocab/invalid_reason> """' + row[9] + '"""^^xsd:string ;')
+        ### This snippet finds the appropiate UMLS CUI mapping if available
+        mappingC = an_dict.get(row[0], 'NA')
+        if mappingC != 'NA':
+            print('        umls:cui """' + mappingC + ' """^^xsd:string ;')
+        ### This could be a looooot more efficient.... but works for now
+        # for iR in range(0,len(data)-1):
+        #	if data[iR]['concept_id']==row[0]:
+        #		print('        umls:cui """' + data[iR]['CUI'] + ' """^^xsd:string ;')
+        #		break
+        print(' .')
 
 ##Footer of the document ###
 print('''
